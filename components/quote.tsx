@@ -9,18 +9,19 @@ interface QuoteProps {
     reactions: string[];
 }
 export default function Quote(props: Readonly<QuoteProps>) {
-
     return (
-        <div className="mt-6 w-1/3 h-36 bg-neutral-300 border rounded-lg">
+        <div className="mt-6 w-5/12 h-fit pb-5 bg-neutral-300 border rounded-lg">
             <div className='mt-8 flex flex-col justify-center items-center'>
-                <div className="text-2xl">{props.message}</div>
-                <div className="flex flex-row justify-between items-center mt-2 w-1/2">
-                    <div className={"text-xl mt-2 " + Eph.className}>{props.author}</div>
-                    <div className="">{props.date}</div>
+                <div className="flex flex-row justify-center pl-10 text-center w-full">
+                    <div className="text-2xl w-2/3">{'"' + props.message + '"'}</div>
+                    <div className="flex items-center justify-center select-none ">
+                        <div className={"text-2xl pl-2 text-center " + Eph.className}>{"- " + props.author}</div>
+                    </div>
                 </div>
+                <div className="p-2 font-extralight text-xs text-center">{props.context}</div>
+                <div className="mt-1 font-extralight text-xs">{props.date}</div>
+                <div className="mt-2 font-extralight text-xs">{"Skrevet av: " + props.writtenBy}</div>
             </div>
-            <div className="quote__context">{props.context}</div>
-            <div className="quote__written-by">{props.writtenBy}</div>
             {/* TODO: add reactions */}
         </div >
     );
