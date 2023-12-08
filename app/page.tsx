@@ -32,8 +32,7 @@ export default function Home() {
       </h1>
       <CreateQuotePopup createQuote={(a, q, c, w) => {
         console.log("author: " + a + " quote: " + q + " context: " + c + " writtenBy: " + w)
-        fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) });
-        getQuotes();
+        fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes());
       }} />
       {
         quotes ?
