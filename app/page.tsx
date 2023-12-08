@@ -1,15 +1,15 @@
 "use client"
-import { Button } from "@/components/input";
+import CreateQuotePopup from "@/components/createQuotePopup";
 import Quote from "@/components/quote";
 
 import { useState } from "react";
 
-type quoteProp = {
-  by: string;
+type Quote = {
+  author: string;
   date: string;
   quote: string;
-  reactions: string[];
   context: string;
+  writtenBy: string;
 }
 
 export default function Home() {
@@ -20,8 +20,16 @@ export default function Home() {
     reactions: [],
     context: "Dette er contexten"
   }
-  const [quotes, setQuotes] = useState();
 
+  const [quotes, setQuotes] = useState<Quote[]>([]);
+
+  async function getQuotes() {
+    setQuotes(await fetch("/api/quotes").then(res => res.json()));
+  }
+
+  useState(() => {
+    getQuotes();
+  });
 
   return (
     <div className="flex flex-col items-center justify-center pt-4">
@@ -29,12 +37,23 @@ export default function Home() {
         Sitater
       </h1>
 
-      <Button variant="primary" className="mt-4">
-        Legg til sitat
-      </Button>
+      <CreateQuotePopup createQuote={(q, a, c, w) => {
 
-      <Quote writtenBy="Sindre" date="2021-10-10" message="Dette er et sitat" author="Sindre" reactions={[]} context="Dette er konteksten" />
-      <Quote writtenBy="Sindre" date="2021-10-10" message="Dette er et veldig langt sitat! Huffa meg så langt!" author="Sindre" reactions={[]} context="Dette er konteksten som er veldig lang! Fyfean noen skriver veldig lang kontekst askdfsdkjhfbasdkjhfj kahsdfhksdgfgas djkhfgaksjhdfgkjsdagfkja sgdfhgasdf kajsdfg aksjdf kajshdgf kjashdg fkjhasd gf" />
+      }} />
+      {
+        quotes ?
+          quotes.map((quote: Quote, i: number) => (
+            <Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenBy} reactions={[]} key={i} />
+          ))
+
+
+
+          : <div className="flex flex-col items-center justify-center mt-4">
+            <div className="text-lg">
+              Ingen sitater enda...
+            </div>
+          </div>
+      }
     </div>
   );
 }

@@ -57,7 +57,7 @@ export const TextInput = ({ placeholder, value, onSubmit, onChange, className, t
     }
 
     return (
-        <div className={`min-w-52 h-full flex flex-row bg-neutral-700 border border-neutral-800 rounded-lg p-1 ${className}`}>
+        <div className={`min-w-52 h-full flex flex-row bg-white border border-neutral-300 rounded-lg p-1 ${className}`}>
             <input
                 ref={element}
                 type={type ? type : "text"}
