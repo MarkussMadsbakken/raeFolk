@@ -98,7 +98,7 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
                         <TextInput placeholder="Sitat" className="w-full stagger h-10" onChange={e => setQuote(e)} />
                         <TextInput placeholder="Kontekst" className="w-full stagger h-10" onChange={e => setContext(e)} />
                         <TextInput placeholder="Forfatter" className="w-full stagger h-10" onChange={e => setWrittenBy(e)} />
-                        <Button variant="primary" className="w-full stagger h-10" onClick={() => createQuote?.(author, quote, context, writtenBy)}>
+                        <Button variant="primary" className="w-full stagger h-10" onClick={() => { createQuote?.(author, quote, context, writtenBy); setIsOpen(false) }}>
                             Legg til sitat
                         </Button>
                     </div>
