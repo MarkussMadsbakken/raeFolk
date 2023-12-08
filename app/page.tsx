@@ -9,23 +9,16 @@ type Quote = {
   date: string;
   quote: string;
   context: string;
-  writtenBy: string;
+  writtenby: string;
 }
 
 export default function Home() {
-  let quote1 = {
-    by: "Sindre",
-    date: "2021-10-10",
-    quote: "Dette er et sitat",
-    reactions: [],
-    context: "Dette er contexten"
-  }
 
   const [quotes, setQuotes] = useState<Quote[]>([]);
 
   async function getQuotes() {
     console.log("Getting quotes");
-    await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows); console.log(res.rows) });
+    await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows.reverse()); });
   }
 
   useEffect(() => {
@@ -37,15 +30,15 @@ export default function Home() {
       <h1 className="font-semibold text-xl">
         Sitater
       </h1>
-
-      <CreateQuotePopup createQuote={(q, a, c, w) => {
+      <CreateQuotePopup createQuote={(a, q, c, w) => {
+        console.log("author: " + a + " quote: " + q + " context: " + c + " writtenBy: " + w)
         fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) });
         getQuotes();
       }} />
       {
         quotes ?
           quotes.map((quote: Quote, i: number) => (
-            <Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenBy} reactions={[]} key={i} />
+            < Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenby} reactions={[]} key={i} />
           ))
 
           : <div className="flex flex-col items-center justify-center mt-4">
