@@ -15,6 +15,7 @@ export async function POST(request: Request) {
         writtenBy: writtenBy,
         date: new Date().toLocaleString()
     }
-    await kv.append("quotes", JSON.stringify(data));
+
+    await kv.hset("quotes", data);
     return NextResponse.redirect('/quotes');
 }
