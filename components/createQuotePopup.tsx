@@ -5,7 +5,7 @@ import { animate, useAnimate, stagger } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 export default function CreateQuotePopup({ createQuote }: { createQuote: (quote: string, author: string, context: string, writtenBy: string) => void }) {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [borderAnimationScope, animateBorder] = useAnimate();
     const [buttonAnimationScope, animateButton] = useAnimate();
     const [contentAnimationScope, animateContent] = useAnimate();

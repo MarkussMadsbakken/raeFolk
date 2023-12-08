@@ -25,7 +25,7 @@ export default function Home() {
 
   async function getQuotes() {
     console.log("Getting quotes");
-    await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then(res => res.rows.map((quote: any) => { setQuotes(quotes => [...quotes, { author: quote.author, date: quote.date, quote: quote.quote, context: quote.context, writtenBy: quote.writtenBy }]) }));
+    await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows); console.log(res.rows) });
   }
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Home() {
       </h1>
 
       <CreateQuotePopup createQuote={(q, a, c, w) => {
-        fetch("/api/quotes", { method: "POST", body: JSON.stringify({ quote: q, author: a, context: c, writtenBy: w }) });
+        fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) });
         getQuotes();
       }} />
       {
