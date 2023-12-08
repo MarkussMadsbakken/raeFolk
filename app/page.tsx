@@ -3,7 +3,6 @@ import CreateQuotePopup from "@/components/createQuotePopup";
 import Quote from "@/components/quote";
 
 import { useEffect, useState } from "react";
-import { GET } from "./api/quotes/route";
 
 type Quote = {
   author: string;
@@ -26,7 +25,7 @@ export default function Home() {
 
   async function getQuotes() {
     console.log("Getting quotes");
-    await fetch("/api/quotes").then(res => res.text()).then((res) => console.log(res));
+    await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then(res => res.rows.map((quote: any) => { setQuotes(quotes => [...quotes, { author: quote.author, date: quote.date, quote: quote.quote, context: quote.context, writtenBy: quote.writtenBy }]) }));
   }
 
   useEffect(() => {
@@ -40,15 +39,14 @@ export default function Home() {
       </h1>
 
       <CreateQuotePopup createQuote={(q, a, c, w) => {
-
+        fetch("/api/quotes", { method: "POST", body: JSON.stringify({ quote: q, author: a, context: c, writtenBy: w }) });
+        getQuotes();
       }} />
       {
         quotes ?
           quotes.map((quote: Quote, i: number) => (
             <Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenBy} reactions={[]} key={i} />
           ))
-
-
 
           : <div className="flex flex-col items-center justify-center mt-4">
             <div className="text-lg">
