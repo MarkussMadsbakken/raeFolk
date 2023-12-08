@@ -2,7 +2,8 @@
 import CreateQuotePopup from "@/components/createQuotePopup";
 import Quote from "@/components/quote";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GET } from "./api/quotes/route";
 
 type Quote = {
   author: string;
@@ -24,12 +25,13 @@ export default function Home() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
 
   async function getQuotes() {
-    setQuotes(await fetch("/api/quotes").then(res => res.json()));
+    console.log("Getting quotes");
+    await fetch("/api/quotes").then(res => res.text()).then((res) => console.log(res));
   }
 
-  useState(() => {
+  useEffect(() => {
     getQuotes();
-  });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center pt-4">
