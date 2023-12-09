@@ -10,12 +10,12 @@ interface QuoteProps {
 }
 export default function Quote(props: Readonly<QuoteProps>) {
     return (
-        <div className="mt-6 w-5/12 h-fit pb-5 bg-neutral-300 border rounded-lg">
-            <div className='mt-8 flex flex-col justify-center items-center'>
-                <div className="flex flex-row justify-center pl-10 text-center w-full">
-                    <div className="text-2xl w-2/3 pl-10">{'"' + props.quote + '"'}</div>
+        <div className="mt-2 md:mt-6 md:w-5/12 w-3/4 h-fit pb-2 md:pb-5 bg-neutral-300 border rounded-lg">
+            <div className='mt-3 md:mt-8 flex flex-col justify-center items-center'>
+                <div className="flex flex-col md:flex-row justify-center items-center md:pl-10 text-center w-full">
+                    <div className="md:text-2xl text-lg w-2/3 md:pl-10">{'"' + props.quote + '"'}</div>
                     <div className="flex items-center justify-center select-none ">
-                        <div className={"text-2xl pl-2 text-center " + Eph.className}>{"- " + props.author}</div>
+                        <div className={"text-2xl md:pl-2 text-center " + Eph.className}>{"- " + props.author}</div>
                     </div>
                 </div>
                 <div className="p-2 font-extralight text-xs text-center">{props.context}</div>
