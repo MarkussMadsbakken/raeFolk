@@ -4,6 +4,7 @@ import { JWT } from "next-auth/jwt"
 
 import { getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { sql } from "@vercel/postgres"
 
 export const authOptions = {
     providers: [
@@ -17,10 +18,10 @@ export const authOptions = {
                 // TODO: this is just for testing purposes
                 // Connect with a database.
                 // Maybe also include a link to image and email? These will be included in the signup process
-                if (credentials?.username == "admin" && credentials?.password == "admin") {
-                    return { id: "adminId", name: "admin" }
-                }
-                return null;
+                const user = await sql`SELECT * FROM users WHERE username = ${credentials?.username} AND password = ${credentials?.password}`
+
+                if (user.rows.length === 0) return null
+                return { id: user.rows[0].id, name: user.rows[0].username }
             },
 
         })

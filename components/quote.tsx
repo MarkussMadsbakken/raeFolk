@@ -47,13 +47,13 @@ export default function Quote(props: Readonly<QuoteProps>) {
 
 
     return (
-        <div className={`relative grid transition-all duration-1000 mt-2 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg`}>
+        <div className={`relative grid transition-all duration-1000 mt-4 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg`}>
             <div className={`absolute inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} transition-opacity duration-1000`}></div>
             <div className='relative'>
                 <div className='mt-3 md:mt-8 flex flex-col justify-center items-center'>
-                    <div className="flex flex-col md:flex-row justify-center items-center text-center w-full">
-                        <div className="md:text-2xl text-lg w-2/3 md:ml-auto ">{props.quote}</div>
-                        <div className="flex items-center justify-center select-none justify-self-end">
+                    <div className="flex flex-col md:relative justify-center items-center text-center w-full">
+                        <div className="md:text-2xl text-lg w-7/12">{props.quote}</div>
+                        <div className="flex md:absolute md:right-0 items-center justify-center select-none justify-self-end">
                             <div className={"text-2xl md:pl-2 text-center md:pr-4 " + Eph.className}>{"- " + props.author}</div>
                         </div>
                     </div>
