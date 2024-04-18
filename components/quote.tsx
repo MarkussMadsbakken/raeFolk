@@ -28,28 +28,23 @@ export default function Quote(props: Readonly<QuoteProps>) {
         changeColor();
     }, [theme])
 
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-    async function changeColor() {
+    function changeColor() {
         let newcolor = theme == "light" ? "neutral-300" : ColorPicker();
         let newcolor2 = theme == "light" ? "neutral-300" : ColorPicker();
         let newcolor3 = theme == "light" ? "neutral-300" : ColorPicker();
 
         setColor(newcolor);
-
-        await sleep(20);
         setColor2(newcolor2);
-
-        await sleep(20);
         setColor3(newcolor3);
     }
 
 
 
     return (
-        <div className={`relative grid transition-all duration-1000 mt-4 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg`}>
-            <div className={`absolute inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} transition-opacity duration-1000`}></div>
-            <div className='relative'>
+        <div className={`relative grid mt-4 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg`}>
+            <div className={`absolute ease-in-out inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} transition-transform bg-size-200 ${theme === "light" ? "opacity-0 bg-pos-0" : "opacity-100 bg-pos-100"} duration-1000`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} ${theme === "light" ? "opacity-100 " : "opacity-0"} duration-1000`}></div>
+            <div className='relative transition-all duration-1000'>
                 <div className='mt-3 md:mt-8 flex flex-col justify-center items-center'>
                     <div className="flex flex-col md:relative justify-center items-center text-center w-full">
                         <div className="md:text-2xl text-lg w-7/12">{props.quote}</div>
