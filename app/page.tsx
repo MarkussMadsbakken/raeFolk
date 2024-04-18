@@ -8,6 +8,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { useEffect, useState } from "react";
 import LoggedInInfo from "@/components/LoggedInInfo";
 import { useSession } from "next-auth/react";
+import ThemeSwticher from "@/components/ThemeSwticher";
 
 type Quote = {
     author: string;
@@ -36,6 +37,7 @@ export default function Home() {
         <div>
             <div className="absolute right-24 top-10">
                 <LoggedInInfo user={session.data?.user} />
+                <ThemeSwticher />
             </div>
             <div className="flex flex-col items-center justify-center pt-4">
                 <h1 className="font-semibold text-xl">

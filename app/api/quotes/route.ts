@@ -2,8 +2,8 @@ import { sql } from "@vercel/postgres";
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    //const Quotes = await sql`SELECT * FROM quotes`;
-    return NextResponse.json({});
+    const Quotes = await sql`SELECT * FROM quotes`;
+    return NextResponse.json(Quotes);
 }
 
 export async function POST(request: Request) {

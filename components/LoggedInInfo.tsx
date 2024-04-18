@@ -14,13 +14,15 @@ export default function LoggedInInfo(props: Readonly<LoggedInInfoProps>) {
     if (!props.user) return null
 
     return (
-        <div className="flex flex-row items-center justify-center rounded border">
+        <div className="flex flex-row items-center justify-center">
             <div>
                 {props.user.name}
             </div>
 
-            <div>
-                <Button variant={"primary"} className={"w-8 h-6"} onClick={signOut}>Logg ut</Button>
+            <div className="ml-2 text-blue-700 hover:cursor-pointer">
+                <button onClick={() => signOut()}>
+                    Logg ut
+                </button>
             </div>
         </div>
     )
