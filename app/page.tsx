@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import LoggedInInfo from "@/components/LoggedInInfo";
 import { useSession } from "next-auth/react";
 import ThemeSwticher from "@/components/ThemeSwticher";
+import PageSwitcher from "@/components/pageSwitcher";
 
 type Quote = {
     author: string;
@@ -27,7 +28,7 @@ export default function Home() {
 
     async function getQuotes() {
         console.log("Getting quotes");
-        await fetch("/api/quotes").then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows.reverse()); setLoading(false); });
+        await fetch("/api/quotes/0", { method: "GET" }).then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows); setLoading(false); });
     }
     useEffect(() => {
         getQuotes();
@@ -48,7 +49,6 @@ export default function Home() {
                     console.log("author: " + a + " quote: " + q + " context: " + c + " writtenBy: " + w)
                     fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes());
                 }} />
-
                 {
                     loading
                         ? <Loading />
@@ -56,6 +56,10 @@ export default function Home() {
                             < Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenby} reactions={[]} key={i} />
                         ))
                 }
+
+                <div className="mb-32 mt-10">
+                    <PageSwitcher />
+                </div>
             </div>
         </div>
     );
