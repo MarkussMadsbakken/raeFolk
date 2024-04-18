@@ -2,6 +2,7 @@
 
 import { Button, TextInput } from "@/components/input";
 import { animate, useAnimate, stagger } from "framer-motion";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
 export default function CreateQuotePopup({ createQuote }: { createQuote: (quote: string, author: string, context: string, writtenBy: string) => void }) {
@@ -9,10 +10,11 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
     const [borderAnimationScope, animateBorder] = useAnimate();
     const [buttonAnimationScope, animateButton] = useAnimate();
     const [contentAnimationScope, animateContent] = useAnimate();
-    let [quote, setQuote] = useState("");
-    let [author, setAuthor] = useState("");
-    let [context, setContext] = useState("");
-    let [writtenBy, setWrittenBy] = useState("");
+    const [quote, setQuote] = useState("");
+    const [author, setAuthor] = useState("");
+    const [context, setContext] = useState("");
+    const [writtenBy, setWrittenBy] = useState("");
+    const session = useSession();
 
     useEffect(() => {
         //checks if a click is outside the dropdown box
@@ -85,7 +87,15 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
 
     return (
         <div className="flex flex-col items-center justify-center" ref={buttonAnimationScope}>
-            <Button variant="primary" onClick={() => setIsOpen(!isOpen)}>
+            <Button variant="primary" onClick={() => {
+                console.log(session)
+                if (!session.data?.user) {
+                    signIn();
+                    return;
+                }
+
+                setIsOpen(!isOpen)
+            }}>
                 Legg til sitat
             </Button>
             <div className="h-0 w-0 hidden absolute top-10 rounded-lg bg-neutral-300 border-2 border-neutral-400" ref={borderAnimationScope}>
@@ -97,8 +107,7 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
                         <TextInput placeholder="Hvem?" className="w-full stagger h-10" onChange={e => setAuthor(e)} />
                         <TextInput placeholder="Sitat" className="w-full stagger h-10" onChange={e => setQuote(e)} />
                         <TextInput placeholder="Kontekst" className="w-full stagger h-10" onChange={e => setContext(e)} />
-                        <TextInput placeholder="Forfatter" className="w-full stagger h-10" onChange={e => setWrittenBy(e)} />
-                        <Button variant="primary" className="w-full stagger h-10" onClick={() => { createQuote?.(author, quote, context, writtenBy); setIsOpen(false) }}>
+                        <Button variant="primary" className="w-full stagger h-10" onClick={() => { createQuote?.(author, quote, context, session.data?.user.name); setIsOpen(false) }}>
                             Legg til sitat
                         </Button>
                     </div>
