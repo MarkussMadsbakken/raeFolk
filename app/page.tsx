@@ -10,6 +10,8 @@ import LoggedInInfo from "@/components/LoggedInInfo";
 import { useSession } from "next-auth/react";
 import ThemeSwticher from "@/components/ThemeSwticher";
 import PageSwitcher from "@/components/pageSwitcher";
+import { animate } from "framer-motion"
+
 
 type Quote = {
     author: string;
@@ -25,17 +27,44 @@ export default function Home() {
 
     const [quotes, setQuotes] = useState<Quote[]>([]);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [initialLoad, setInitialLoad] = useState(true);
 
-    async function getQuotes() {
-        console.log("Getting quotes");
-        await fetch("/api/quotes/0", { method: "GET" }).then(res => res.text()).then(res => JSON.parse(res)).then((res) => { setQuotes(res.rows); setLoading(false); });
+    // Smooth scroll to top
+    const scrollToTop = async () => {
+        animate(0, 1, {
+            ease: "easeOut",
+            duration: 0.5,
+            onUpdate: (val) => {
+                scrollTo(0, scrollY * (1 - val))
+            }
+        })
     }
+
+    async function getQuotes(page: number) {
+        if (!initialLoad) scrollToTop();
+        setInitialLoad(false);
+
+        await fetch("/api/quotes/" + page, { method: "GET" })
+            .then(res => res.text())
+            .then(res => JSON.parse(res)).then((res) => {
+                setQuotes(res.rows);
+                setLoading(false);
+            });
+    }
+
     useEffect(() => {
-        getQuotes();
+        getQuotes(0);
     }, []);
 
+
+    useEffect(() => {
+        setLoading(true);
+        getQuotes(page);
+    }, [page])
+
     return (
-        <div>
+        <div >
             <div className="absolute right-24 top-10">
                 <LoggedInInfo user={session.data?.user} />
                 <ThemeSwticher />
@@ -47,7 +76,7 @@ export default function Home() {
 
                 <CreateQuotePopup createQuote={(a, q, c, w) => {
                     console.log("author: " + a + " quote: " + q + " context: " + c + " writtenBy: " + w)
-                    fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes());
+                    fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes(page));
                 }} />
                 {
                     loading
@@ -58,7 +87,7 @@ export default function Home() {
                 }
 
                 <div className="mb-32 mt-10">
-                    <PageSwitcher />
+                    <PageSwitcher page={page} onPageChange={(page) => setPage(page)} />
                 </div>
             </div>
         </div>
