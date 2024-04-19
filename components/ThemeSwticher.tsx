@@ -10,7 +10,6 @@ export default function ThemeSwticher() {
     useEffect(() => {
         let storedTheme;
         storedTheme = localStorage.getItem("theme") || "light";
-        console.log(storedTheme)
         setTheme(storedTheme as theme);
     }, [])
 
