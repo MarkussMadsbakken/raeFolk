@@ -89,7 +89,7 @@ export const TextInput = ({ placeholder, value, onSubmit, onChange, className, t
  * @param {Array} children - The array of child components that represent the options in the dropdown.
  * @returns {JSX.Element} - The JSX element that represents the dropdown component.
  */
-export const Dropdown = ({ children, open, className }: { children: reactChild | multipleReactChildren, open: number, className?: string }) => {
+export const Dropdown = ({ children, open, className }: { children: multipleReactChildren, open: number, className?: string }) => {
     const staggerMenuItems = stagger(0.02, { startDelay: 0.1 }); //generates a stagger function for the menu items
     const [isOpen, setIsOpen] = useState(false); //if the dropdown is open
     const [selectedItem, setSelectedItem] = useState(
