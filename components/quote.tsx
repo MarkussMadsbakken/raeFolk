@@ -41,7 +41,7 @@ export default function Quote(props: Readonly<QuoteProps>) {
 
 
     return (
-        <div className={`relative grid mt-4 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg`}>
+        <div className={`relative grid mt-4 md:mt-6 md:w-5/12 w-3/4 pb-2 md:pb-5 border rounded-lg transition-all duration-500`}>
             <div className={`absolute ease-in-out inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} transition-transform bg-size-200 ${theme === "light" ? "opacity-0 bg-pos-0" : "opacity-100 bg-pos-100"} duration-1000`}></div>
             <div className={`absolute inset-0 bg-gradient-to-br from-${color} via-${color2} to-${color3} ${theme === "light" ? "opacity-100 " : "opacity-0"} duration-1000`}></div>
             <div className='relative transition-all duration-1000'>

@@ -156,7 +156,7 @@ export const Dropdown = ({ children, open, className }: { children: reactChild |
     return (
         <div ref={scope} className={'w-52 h-12 ' + className}>
             <motion.button
-                className='w-full h-full flex flex-row justify-between rounded-md border border-neutral-200 bg-white'
+                className='w-full h-full flex flex-row justify-between rounded-md border border-neutral-300 bg-white'
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className='px-3 h-full flex justify-center items-center'>
@@ -180,7 +180,7 @@ export const Dropdown = ({ children, open, className }: { children: reactChild |
 
             <div
                 id='dropdown'
-                className='first-letter:flex flex-col justify-center mt-2 overflow-hidden rounded-md border border-neutral-200 bg-white'
+                className='first-letter:flex flex-col justify-center mt-2 overflow-hidden rounded-md border border-neutral-300 bg-white'
                 style={{
                     pointerEvents: isOpen ? "auto" : "none",
                     clipPath: "inset(10% 50% 90% 50% round 10px)",

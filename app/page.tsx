@@ -65,18 +65,20 @@ export default function Home() {
 
     return (
         <div >
-            <div className="absolute right-24 top-10">
-                <LoggedInInfo user={session.data?.user} />
-                <ThemeSwticher />
-            </div>
             <div className="flex flex-col items-center justify-center pt-4">
-                <h1 className="font-semibold text-xl">
+                <h1 className="font-semibold text-xl m-2">
                     Sitater
                 </h1>
 
                 <CreateQuotePopup createQuote={(q, a, c, w) => {
                     fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes(page));
                 }} />
+
+                <div className="md:absolute md:right-24 md:top-10 mt-4 md:mt-0 flex flex-col justify-center content-center transition-all">
+                    <LoggedInInfo user={session.data?.user} />
+                    <ThemeSwticher />
+                </div>
+
                 {
                     loading
                         ? <Loading />
@@ -96,6 +98,8 @@ export default function Home() {
 function Loading() {
     return (
         <div className="flex flex-col items-center justify-center mt-4 w-full">
+            <QuoteSkeleton />
+            <QuoteSkeleton />
             <QuoteSkeleton />
             <QuoteSkeleton />
             <QuoteSkeleton />

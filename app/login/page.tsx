@@ -2,13 +2,19 @@
 import { Button, TextInput } from "@/components/input"
 import { signIn } from "next-auth/react"
 import { useState } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/util/toastProvider"
 
 export default function Login() {
     const [password, setPassword] = useState("")
     const [username, setUsername] = useState("")
+    const [wrongPasswordMessage, setWrongPasswordMessage] = useState("")
+    const [wrongCredentials, setWrongCredentials] = useState(false)
+
+    const passordWrongMessages = [
+        "Straight up feil passord eller brukernavn!",
+        "Passordet eller brukernavnet var ikke riktig no cap!",
+    ]
 
     const router = useRouter()
     const toast = useToast()
@@ -21,6 +27,12 @@ export default function Login() {
             redirect: false
         }).then((res) => {
             if (res?.error) {
+                if (res.error === "CredentialsSignin") {
+                    setWrongCredentials(true)
+                    setWrongPasswordMessage(passordWrongMessages[Math.floor(Math.random() * passordWrongMessages.length)])
+                    return;
+                }
+
                 toast.enqueue({ title: "Error", text: res.error, variant: "error" })
             } else {
                 router.push("/")
@@ -29,18 +41,13 @@ export default function Login() {
     }
 
     return (
-        <div className="flex flex-col mt-40 items-center justify-center">
-            <TextInput placeholder="Username" className="w-1/3 h-14 mt-4" onChange={(s) => setUsername(s)} />
-            <TextInput placeholder="Password" className="w-1/3 h-14 mt-4" onChange={(s) => setPassword(s)} onSubmit={() => logIn(username, password)} onEnterClear={true} type="password" />
-            <Button variant="primary" className="w-1/3 h-14 mt-4" onClick={() => {
+        <div className="flex flex-col items-center justify-center max-h-screen">
+            <TextInput placeholder="Username" className="md:w-1/3 w-2/3 h-14 mt-40" onChange={(s) => setUsername(s)} />
+            <TextInput placeholder="Password" className="md:w-1/3 w-2/3 h-14 mt-4" onChange={(s) => setPassword(s)} onSubmit={() => logIn(username, password)} onEnterClear={true} type="password" />
+            <Button variant="primary" className="md:w-1/3 w-2/3 h-14 mt-4" onClick={() => {
                 logIn(username, password);
             }}>Login</Button>
-
-            <div className="mt-8 mb-8">
-                <div>
-                    {"Don't have an account?"} <Link href="/register" className="text-blue-500">Register</Link>
-                </div>
-            </div>
+            {wrongCredentials && <div className="text-red-500 mt-2">{wrongPasswordMessage}</div>}
         </div>
     )
 }
