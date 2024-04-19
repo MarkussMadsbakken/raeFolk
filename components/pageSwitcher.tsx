@@ -29,7 +29,7 @@ export default function PageSwitcher(props: PageSwitcherProps) {
             }
 
 
-            <button className="w-12 h-12 border-2 rounded bg-gray-700 text-white">
+            <button className="w-12 h-12 border-2 border-neutral-700 rounded bg-gray-700 text-white">
                 {page + 1}
             </button>
 
