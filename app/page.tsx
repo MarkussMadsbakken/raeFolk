@@ -19,6 +19,7 @@ type Quote = {
     quote: string;
     context: string;
     writtenby: string;
+    id: string;
 }
 
 export default function Home() {
@@ -83,7 +84,15 @@ export default function Home() {
                     loading
                         ? <Loading />
                         : quotes.map((quote: Quote, i: number) => (
-                            < Quote author={quote.author} date={quote.date} context={quote.context} quote={quote.quote} writtenBy={quote.writtenby} reactions={[]} key={i} />
+                            < Quote
+                                author={quote.author}
+                                date={quote.date}
+                                context={quote.context}
+                                quote={quote.quote}
+                                writtenBy={quote.writtenby}
+                                id={quote.id}
+                                key={i}
+                            />
                         ))
                 }
 
