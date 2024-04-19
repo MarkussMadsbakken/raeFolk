@@ -11,11 +11,11 @@ export enum reactionMap {
     neutral = "😐"
 }
 export enum reactionDescription {
-    like = "likte sitatet",
+    like = "følte seg enig med sitatet",
     dislike = "likte ikke sitatet",
     heart = "elsket sitatet",
     angry = "ble provosert av sitatet",
     sad = "syntes sitatet var veldig trist",
     grin = "mente sitatet var kleint",
-    neutral = "mente sitattet var mid"
+    neutral = "mente sitatet var mid"
 }

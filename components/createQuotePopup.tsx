@@ -109,7 +109,7 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
             }}>
                 Legg til sitat
             </Button>
-            <div className="h-0 w-0 hidden absolute top-10 z-10 rounded-lg bg-white shadow-lg shadow-neutral-600 border-2 border-white" ref={borderAnimationScope}>
+            <div className="h-0 w-0 hidden absolute top-40 z-50 rounded-lg bg-white shadow-lg shadow-neutral-600 border-2 border-white" ref={borderAnimationScope}>
                 <div ref={contentAnimationScope} className="flex flex-col items-center">
                     <div className="flex flex-col w-80 md:w-[30rem] space-y-4 mt-2">
                         <div className="text-lg text-center stagger">
