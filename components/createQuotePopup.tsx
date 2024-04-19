@@ -1,20 +1,32 @@
 "use client"
 
-import { Button, TextInput } from "@/components/input";
+import { Button, Dropdown, DropdownItem, TextInput } from "@/components/input";
 import { animate, useAnimate, stagger } from "framer-motion";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 
-export default function CreateQuotePopup({ createQuote }: { createQuote: (quote: string, author: string, context: string, writtenBy: string) => void }) {
+export default function CreateQuotePopup({ createQuote }: { createQuote: (quote: string, author: number, context: string, writtenBy: number) => void }) {
     const [isOpen, setIsOpen] = useState(false);
     const [borderAnimationScope, animateBorder] = useAnimate();
     const [buttonAnimationScope, animateButton] = useAnimate();
     const [contentAnimationScope, animateContent] = useAnimate();
+    const [authors, setAuthors] = useState<{ id: number, username: string }[]>([]);
     const [quote, setQuote] = useState("");
-    const [author, setAuthor] = useState("");
+    const [author, setAuthor] = useState<number>(-1);
     const [context, setContext] = useState("");
-    const [writtenBy, setWrittenBy] = useState("");
     const session = useSession();
+
+    const fetchUsers = async () => {
+        await fetch("/api/users", { method: "GET" })
+            .then(res => res.text())
+            .then(res => JSON.parse(res)).then((res) => {
+                setAuthors(res.rows);
+            });
+    }
+
+    useEffect(() => {
+        fetchUsers();
+    }, [])
 
     useEffect(() => {
         //checks if a click is outside the dropdown box
@@ -88,7 +100,6 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
     return (
         <div className="flex flex-col items-center justify-center" ref={buttonAnimationScope}>
             <Button variant="primary" onClick={() => {
-                console.log(session)
                 if (!session.data?.user) {
                     signIn();
                     return;
@@ -98,16 +109,26 @@ export default function CreateQuotePopup({ createQuote }: { createQuote: (quote:
             }}>
                 Legg til sitat
             </Button>
-            <div className="h-0 w-0 hidden absolute top-10 z-10 rounded-lg bg-neutral-300 border-2 border-neutral-400" ref={borderAnimationScope}>
+            <div className="h-0 w-0 hidden absolute top-10 z-10 rounded-lg bg-white shadow-lg shadow-neutral-600 border-2 border-white" ref={borderAnimationScope}>
                 <div ref={contentAnimationScope} className="flex flex-col items-center">
                     <div className="flex flex-col w-80 md:w-[30rem] space-y-4 mt-2">
                         <div className="text-lg text-center stagger">
                             Legg til sitat
                         </div>
-                        <TextInput placeholder="Hvem?" className="w-full stagger h-10" onChange={e => setAuthor(e)} />
-                        <TextInput placeholder="Sitat" className="w-full stagger h-10" onChange={e => setQuote(e)} />
-                        <TextInput placeholder="Kontekst" className="w-full stagger h-10" onChange={e => setContext(e)} />
-                        <Button variant="primary" className="w-full stagger h-10" onClick={() => { createQuote?.(author, quote, context, session.data?.user.name); setIsOpen(false) }}>
+                        <div className="flex w-full stagger justify-center content-center">
+                            {authors.length === 0 ? <div className="w-full h-12 flex justify-center items-center">Laster inn forfattere...</div> :
+                                <Dropdown open={-1} className="stagger w-full">
+                                    {authors.map((author, i) => (
+                                        <DropdownItem key={i} onSelect={() => setAuthor(author.id)}>
+                                            {author.username}
+                                        </DropdownItem>
+                                    ))}
+                                </Dropdown>
+                            }
+                        </div>
+                        <TextInput placeholder="Sitat" className="w-full stagger h-12 rounded-md" onChange={e => setQuote(e)} />
+                        <TextInput placeholder="Kontekst" className="w-full stagger h-12 rounded-md" onChange={e => setContext(e)} />
+                        <Button variant="primary" className="w-full stagger h-12 rounded-md" onClick={() => { createQuote?.(quote, author, context, session.data?.user.id); setIsOpen(false) }}>
                             Legg til sitat
                         </Button>
                     </div>

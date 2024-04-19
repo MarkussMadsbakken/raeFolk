@@ -74,8 +74,7 @@ export default function Home() {
                     Sitater
                 </h1>
 
-                <CreateQuotePopup createQuote={(a, q, c, w) => {
-                    console.log("author: " + a + " quote: " + q + " context: " + c + " writtenBy: " + w)
+                <CreateQuotePopup createQuote={(q, a, c, w) => {
                     fetch("/api/quotes", { method: "POST", body: JSON.stringify({ author: a, quote: q, context: c, writtenBy: w }) }).then(res => getQuotes(page));
                 }} />
                 {
