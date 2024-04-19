@@ -40,7 +40,7 @@ export default function Quote(props: Readonly<QuoteProps>) {
 
     useEffect(() => {
         fetchReactions();
-    }, []);
+    }, [props.id]);
 
     const fetchReactions = async () => {
         await fetch("/api/reactions/" + props.id, { method: "GET" })
