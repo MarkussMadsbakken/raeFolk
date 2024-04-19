@@ -69,7 +69,7 @@ export default function Reaction(props: Readonly<ReactionProps>) {
 
     return (
         <>
-            <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="grid grid-cols-2 justify-center content-center cursor-pointer select-none" onClick={props.addReaction}>
+            <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="grid h-full -translate-y-[1px] grid-cols-2 justify-center content-center cursor-pointer select-none" onClick={props.addReaction}>
                 <div className="h-fit text-center">
                     {props.users.length}
                 </div>
