@@ -1,5 +1,5 @@
 export type theme = "light" | "light-colorful"
-export type reaction = "like" | "dislike" | "heart" | "angry" | "sad" | "grin" | "neutral"
+export type reaction = "like" | "dislike" | "heart" | "angry" | "sad" | "grin" | "neutral" | "hot"
 export type userReaction = { reaction: reaction, user: { name: string, id: string } }
 export enum reactionMap {
     like = "👍",
@@ -8,7 +8,8 @@ export enum reactionMap {
     angry = "😡",
     sad = "😢",
     grin = "😬",
-    neutral = "😐"
+    neutral = "😐",
+    hot = "🥵"
 }
 export enum reactionDescription {
     like = "kjente seg enig med sitatet",
@@ -17,5 +18,6 @@ export enum reactionDescription {
     angry = "ble provosert av sitatet",
     sad = "syntes sitatet var veldig trist",
     grin = "mente sitatet var kleint",
-    neutral = "mente sitatet var mid"
+    neutral = "mente sitatet var mid",
+    hot = "syntes sitatet var hot"
 }
