@@ -13,6 +13,7 @@ export default function NewReactionPicker(props: Readonly<ReactionPickerProps>) 
             <button onClick={() => props.addReaction("sad")}>😢</button>
             <button onClick={() => props.addReaction("grin")}>😬</button>
             <button onClick={() => props.addReaction("neutral")} >😐</button>
+            <button onClick={() => props.addReaction("hot")}>🥵</button>
         </div>
     )
 }
