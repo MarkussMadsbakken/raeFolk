@@ -1,42 +1,54 @@
 import { useEffect, useState } from "react"
 
 interface PageSwitcherProps {
-    page?: number
+    page: number
     onPageChange?: (page: number) => void
+    numberOfPages: number
 }
 
 export default function PageSwitcher(props: PageSwitcherProps) {
-    const [page, setPage] = useState<number>(props.page ? props.page : 0)
+    const [page, setPage] = useState<number>(props.page)
+
 
     useEffect(() => {
         if (props.onPageChange) {
             props.onPageChange(page)
         }
-    }, [page, props])
+    }, [page])
 
+    useEffect(() => {
+        setPage(props.page)
+    }, [props.page])
+
+
+    const pages = Array.from({ length: props.numberOfPages }, (_, i) => i + 1)
 
     return (
         <div className="flex flex-row mt-2 space-x-4">
-            {page > 0 &&
-                <button className=" w-12 h-12 border-2 border-neutral-700 rounded" onClick={() => setPage(page - 1)}>
-                    {page}
-                </button>
+            {
+                pages.map((pageNumber) => {
+                    if (pageNumber === page + 1) {
+                        return <CurrentPageButton key={pageNumber} page={pageNumber} />
+                    }
+                    return <PageButton key={pageNumber} page={pageNumber} onClick={() => setPage(pageNumber - 1)} />
+                })
             }
-
-            {page < 1 &&
-                <div className="ml-12">
-                </div>
-            }
-
-
-            <button className="w-12 h-12 border-2 border-neutral-700 rounded bg-gray-700 text-white">
-                {page + 1}
-            </button>
-
-            <button className=" w-12 h-12 border-2 border-neutral-700 rounded" onClick={() => setPage(page + 1)}>
-                {page + 2}
-            </button>
         </div>
     )
+}
 
+function PageButton({ page, onClick }: { page: number, onClick: () => void }) {
+    return (
+        <button className="w-12 h-12 border-2 border-neutral-700 rounded" onClick={onClick}>
+            {page}
+        </button>
+    )
+}
+
+function CurrentPageButton({ page }: { page: number }) {
+    return (
+        <button className="w-12 h-12 border-2 border-neutral-700 rounded bg-gray-700 text-white">
+            {page}
+        </button>
+    )
 }

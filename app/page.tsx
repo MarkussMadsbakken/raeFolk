@@ -2,34 +2,32 @@
 import CreateQuotePopup from "@/components/createQuotePopup";
 import Quote from "@/components/quote";
 
-import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css'
-
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LoggedInInfo from "@/components/LoggedInInfo";
 import { useSession } from "next-auth/react";
 import ThemeSwticher from "@/components/ThemeSwticher";
 import PageSwitcher from "@/components/pageSwitcher";
 import { animate } from "framer-motion"
-
-
-type Quote = {
-    author: string;
-    date: string;
-    quote: string;
-    context: string;
-    writtenby: string;
-    id: string;
-}
+import { quote } from "@/types/types";
+import QuoteSkeleton from "@/components/quoteSkeleton";
+import { useRouter, useSearchParams } from "next/navigation";
+import QuotePopup from "@/components/quotePopup";
+import { url } from "inspector";
 
 export default function Home() {
 
     const session = useSession();
 
-    const [quotes, setQuotes] = useState<Quote[]>([]);
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const highlight = useSearchParams().get("highlight");
+
+    const [quotes, setQuotes] = useState<quote[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [initialLoad, setInitialLoad] = useState(true);
+    const [highlightedQuote, setHighlightedQuote] = useState<quote | null>();
+    const [numberOfPages, setNumberOfPages] = useState<number>(0);
 
     // Smooth scroll to top
     const scrollToTop = async () => {
@@ -42,27 +40,94 @@ export default function Home() {
         })
     }
 
-    async function getQuotes(page: number) {
+    const getQuotes = async (page: number): Promise<quote[]> => {
         if (!initialLoad) scrollToTop();
         setInitialLoad(false);
 
-        await fetch("/api/quotes/" + page, { method: "GET" })
+        return await fetch("/api/quotes/" + page, { method: "GET" })
+            .then(res => res.text())
+            .then(res => JSON.parse(res))
+            .then(res => res.rows)
+    }
+
+    const getNumberOfPages = async () => {
+        await fetch("/api/quotes/numpages", { method: "GET" })
             .then(res => res.text())
             .then(res => JSON.parse(res)).then((res) => {
-                setQuotes(res.rows);
-                setLoading(false);
+                setNumberOfPages(res.rows[0].numpages);
             });
     }
 
+    const getPageOfQuote = async (quoteId: string): Promise<number> => {
+        return await fetch("/api/quotes/pageof/" + quoteId, { method: "GET" })
+            .then(res => res.text())
+            .then(res => JSON.parse(res));
+    }
+
+    const updateHighlightQuery = (quoteId: string) => {
+        router.replace("?" + new URLSearchParams({ highlight: quoteId }), { scroll: false });
+    }
+
+    const removeHighlightQuery = () => {
+        router.replace("/", { scroll: false });
+    }
+
     useEffect(() => {
-        getQuotes(0);
+        // get number of pages  
+        getNumberOfPages();
+
+        // highlight quote if needed
+        if (!highlight) {
+            getQuotes(0).then(quotes => {
+                setQuotes(quotes);
+                setLoading(false);
+            });
+
+            return;
+        }
+
+        getPageOfQuote(highlight).then(page => {
+            if (Number(page) === 0) {
+                getQuotes(0).then(quotes => {
+                    setQuotes(quotes);
+                    setLoading(false)
+                });
+                return;
+            }
+            setLoading(false);
+            setPage(Number(page));
+        })
+
     }, []);
 
 
     useEffect(() => {
+        if (loading) return;
+
         setLoading(true);
-        getQuotes(page);
+        getQuotes(page).then(quotes => {
+            setQuotes(quotes);
+            setLoading(false);
+        })
     }, [page])
+
+    useEffect(() => {
+        if (loading || !highlight) return
+
+        const quote = quotes.find(quote => quote.id == highlight)
+
+        if (!quote) {
+            return;
+        }
+        setHighlightedQuote(quote);
+
+    }, [quotes])
+
+    useEffect(() => {
+        if (!highlightedQuote) return;
+
+        updateHighlightQuery(highlightedQuote.id)
+    }, [highlightedQuote])
 
     return (
         <div >
@@ -83,21 +148,37 @@ export default function Home() {
                 {
                     loading
                         ? <Loading />
-                        : quotes.map((quote: Quote, i: number) => (
-                            < Quote
-                                author={quote.author}
-                                date={quote.date}
-                                context={quote.context}
-                                quote={quote.quote}
-                                writtenBy={quote.writtenby}
-                                id={quote.id}
-                                key={i}
-                            />
-                        ))
+                        :
+                        <div className="w-3/4 md:w-5/12 ">
+                            {
+                                quotes.map((quote: quote, i: number) => (
+                                    <Quote
+                                        author={quote.author}
+                                        date={quote.date}
+                                        context={quote.context}
+                                        quote={quote.quote}
+                                        writtenBy={quote.writtenby}
+                                        id={quote.id}
+                                        key={i}
+                                        onClick={() => setHighlightedQuote(quote)}
+                                    />
+                                ))
+                            }
+                        </div>
+                }
+
+                {highlightedQuote &&
+                    <QuotePopup
+                        quote={highlightedQuote}
+                        onClose={() => {
+                            setHighlightedQuote(null)
+                            removeHighlightQuery();
+                        }}
+                    />
                 }
 
                 <div className="mb-32 mt-10">
-                    <PageSwitcher page={page} onPageChange={(page) => setPage(page)} />
+                    <PageSwitcher numberOfPages={numberOfPages} page={page} onPageChange={(page) => setPage(page)} />
                 </div>
             </div>
         </div>
@@ -112,24 +193,6 @@ function Loading() {
             <QuoteSkeleton />
             <QuoteSkeleton />
             <QuoteSkeleton />
-        </div>
-    );
-}
-
-function QuoteSkeleton() {
-    return (
-        <div className="bg-neutral-300 md:w-5/12 w-3/4 h-fit pb-2 md:pb-5 mt-2 md:mt-4 rounded-lg">
-            <div className='md:mt-8 flex flex-col justify-center items-center'>
-                <div className="flex flex-col md:flex-row justify-center items-center md:pl-10 w-full">
-                    <Skeleton containerClassName="w-2/3 md:ml-20" count={2} className="h-8 m-2" />
-                    <div className="flex items-center justify-center w-full md:w-20 md:pl-2 md:ml-4">
-                        <Skeleton containerClassName="md:w-full w-1/12" />
-                    </div>
-                </div>
-                <Skeleton className="mt-3" containerClassName="w-3/12" />
-                <Skeleton className="mt-1" containerClassName="w-1/12" />
-                <Skeleton className="mt-1" containerClassName="w-2/12" />
-            </div>
         </div>
     );
 }
