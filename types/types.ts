@@ -29,6 +29,6 @@ export enum reactionDescription {
     neutral = "mente sitatet var mid",
     hot = "syntes sitatet var hot"
 }
-//export const HOSTED_URL = "https://rae-folk.vercel.app"
-export const HOSTED_URL = "http://localhost:3000"
+export const HOSTED_URL = "https://rae-folk.vercel.app"
+//export const HOSTED_URL = "http://localhost:3000"
 export const QUOTES_PER_PAGE = 10
