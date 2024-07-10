@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 type reactChild = React.JSX.Element;
 type multipleReactChildren = React.JSX.Element[];
 
-export const Button = ({ variant, children, className, onClick, ...rest }: { variant?: String, children?: React.ReactNode, className?: String, onClick?: () => void }) => {
+export const Button = ({ variant, children, className, onClick, ...rest }: { variant?: "primary" | "secondary", children?: React.ReactNode, className?: String, onClick?: () => void }) => {
     return (
         <button
             className={

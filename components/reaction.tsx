@@ -59,7 +59,7 @@ export default function Reaction(props: Readonly<ReactionProps>) {
         if (index === 0) {
             return name
         }
-        if (index === 1) {
+        if (index === props.users.length - 1) {
             return ` og ${name}`
         }
         return `, ${name}`
