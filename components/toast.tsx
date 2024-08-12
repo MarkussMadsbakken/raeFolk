@@ -38,7 +38,7 @@ export default function Toast({ title, text, onClose, variant, fade }: { title?:
     return (
         <div
             ref={fadeOutScope}
-            className={`fixed bottom-4 right-4 ${bg} shadow-lg border z-20 p-4 rounded-lg max-w-sm w-full transition-all ease-in-out duration-200 transform animate-slideUpEnter animate-fadeInLeave`}
+            className={`fixed bottom-4 right-4 ${bg} shadow-lg border p-4 rounded-lg max-w-sm w-full transition-all ease-in-out duration-200 transform animate-slideUpEnter animate-fadeInLeave z-[99]`}
         >
             <div className='flex justify-between items-center'>
                 <div>
